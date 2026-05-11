@@ -1,0 +1,28 @@
+# --- Application specific properties per environment ---
+# Adjust logging levels in file logback-spring.xml
+
+client:
+  api:
+    token: ${client.api.token}
+    
+build:
+  name: '@build.number@'
+  version: '@project.version@'
+  timestamp: '@build.timestamp@'
+
+logging:
+  file:
+    name: "logs/@project.build.finalName@.log"
+  level:
+    root: info
+    '[net.zoostar]': trace
+    '[com.zoostarinc]': trace
+  logback:
+    rollingpolicy:
+      file-name-pattern: "logs/archive/@project.build.finalName@-%d{yyyy-MM-dd}.%i.log.zip"
+      max-history: 10
+
+spring:
+  output:
+    ansi:
+      enabled: always
