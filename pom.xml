@@ -9,7 +9,7 @@
     <parent>
         <groupId>net.zoostar.boot</groupId>
         <artifactId>zoostar-boot-starter-parent</artifactId>
-        <version>3.6.0</version>
+        <version>3.7.0</version>
     </parent>
     <modules>
         <module>mdm-core</module>
