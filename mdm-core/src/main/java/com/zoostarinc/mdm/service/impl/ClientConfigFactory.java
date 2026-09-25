@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClientConfigFactory {
 
-//	private final Map<String /* clientId */, Map<String /* type */, Pair<AbstractClientConfig, AbstractMasterDataSupplier>>> registeredClients = new HashMap<>();
-
 	private final Map<String /* clientId */, Map<String /* type */, AbstractClientConfig>> registeredClients = new HashMap<>();
 
 	/**
@@ -28,7 +26,12 @@ public class ClientConfigFactory {
 	 * The core factory method that retrieves data from remote client.
 	 */
 	public MasterDataUUID getClientData(String clientId, String type, String sourceId) {
-		var clientConfig = registeredClients.get(clientId.toUpperCase()).get(type.toUpperCase());
+		var value = registeredClients.get(clientId.toUpperCase());
+		if (value == null) {
+			throw new IllegalArgumentException("Unknown clientId: " + clientId);
+		}
+		
+		var clientConfig = value.get(type.toUpperCase());
 		if (clientConfig == null) {
 			throw new IllegalArgumentException("Unknown type: " + type);
 		}
