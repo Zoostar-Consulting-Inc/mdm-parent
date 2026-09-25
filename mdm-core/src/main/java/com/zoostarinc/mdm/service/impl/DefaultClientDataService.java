@@ -20,11 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultClientDataService implements ClientDataService, InitializingBean {
 
 	private ClientConfigFactory clientConfigFactory;
-	
+
 	@Override
 	public MasterDataUUID retrieve(String clientId, String type, String sourceId) {
 		var clientData = clientConfigFactory.getClientData(clientId, type, sourceId);
-		if(clientData == null) {
+		if (clientData == null) {
 			throw new IllegalArgumentException(String.format("No data found for given clientId: %s.", clientId));
 		}
 		return clientData;
@@ -38,8 +38,7 @@ public class DefaultClientDataService implements ClientDataService, Initializing
 	protected void initClientConfigFactory() {
 		log.info("{}...", "Initializing Client Config Factory");
 		clientConfigFactory = new ClientConfigFactory();
-		SourceOneCustomerConfig sourceOneCustomerConfig = new SourceOneCustomerConfig();
-		clientConfigFactory.registerClient("SOURCEONE", "CUSTOMER", sourceOneCustomerConfig); // This can also be configured in DB
+		clientConfigFactory.registerClient("SOURCEONE", "CUSTOMER", new SourceOneCustomerConfig()); // This can also be configured in DB
 	}
 
 }

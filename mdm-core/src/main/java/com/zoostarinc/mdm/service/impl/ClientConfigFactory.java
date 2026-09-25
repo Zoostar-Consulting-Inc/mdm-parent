@@ -4,23 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.zoostarinc.mdm.model.MasterDataUUID;
-import com.zoostarinc.mdm.model.client.ClientData;
-import com.zoostarinc.mdm.util.config.ClientConfig;
+import com.zoostarinc.mdm.util.config.AbstractClientConfig;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ClientConfigFactory {
 
-	private final Map<String, Map<String, ClientConfig<? extends ClientData>>> registeredClients = new HashMap<>();
+//	private final Map<String /* clientId */, Map<String /* type */, Pair<AbstractClientConfig, AbstractMasterDataSupplier>>> registeredClients = new HashMap<>();
+
+	private final Map<String /* clientId */, Map<String /* type */, AbstractClientConfig>> registeredClients = new HashMap<>();
 
 	/**
 	 * Register new types dynamically.
 	 */
-	public void registerClient(String clientId, String type, ClientConfig<? extends ClientData> clientConfig) {
+	public void registerClient(String clientId, String type, AbstractClientConfig clientConfig) {
 		var registeredType = registeredClients.computeIfAbsent(clientId.toUpperCase(), k -> new HashMap<>());
-		var config = registeredType.computeIfAbsent(type.toUpperCase(), k -> clientConfig);
-		log.info("Registered {} for {} having data type: {}", type.toUpperCase(), clientId.toUpperCase(), config.getClientDataType());
+		log.info("Registered {} for client {}", type.toUpperCase(), clientId.toUpperCase());
+		registeredType.computeIfAbsent(type.toUpperCase(), k -> clientConfig);
 	}
 
 	/**
@@ -31,6 +32,7 @@ public class ClientConfigFactory {
 		if (clientConfig == null) {
 			throw new IllegalArgumentException("Unknown type: " + type);
 		}
-		return clientConfig.apply(sourceId);
+
+		return clientConfig.apply(sourceId).get();
 	}
 }

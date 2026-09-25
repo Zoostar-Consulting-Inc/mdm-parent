@@ -1,6 +1,5 @@
 package com.zoostarinc.mdm.model;
 
-import java.util.Map;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +23,6 @@ public class MasterDataUUID implements MasterData<UUID> {
 	
 	private String clientId;
 	
-	private Map<String, String> stringAttributes;
+	private String title;
 	
 }
