@@ -1,0 +1,55 @@
+@startuml MasterDataRestFlow
+title Master Data REST API - Request Flow Sequence Diagram
+actor Client
+participant "MasterDataRestController" as Controller
+participant "DataUpdateValidatorUUID" as Validator
+participant "MasterDataService" as Service
+participant "DefaultMasterDataService" as ServiceImpl
+participant "ClientDataService" as ClientService
+participant "MasterDataUUID" as Model
+
+Client ->> Controller: GET /api/{source}/{type}/{id}
+activate Controller
+
+Controller ->> Validator: new DataUpdateValidatorUUID(source, type, id)
+activate Validator
+
+Validator ->> Validator: validateSource()
+Validator ->> Validator: validateType()
+Validator ->> Validator: validateId()
+
+Validator -->> Controller: validator instance created
+
+Controller ->> Service: update(validator)
+activate Service
+
+Service ->> ServiceImpl: update(validator)
+activate ServiceImpl
+
+ServiceImpl ->> Validator: get() [calls supplier]
+activate Validator
+
+Validator ->> Model: new MasterDataUUID(...)
+activate Model
+Model -->> Validator: MasterDataUUID instance
+deactivate Model
+
+Validator -->> ServiceImpl: MasterDataUUID
+
+ServiceImpl ->> ClientService: retrieve(masterDataUUID)
+activate ClientService
+
+ClientService -->> ServiceImpl: ResponseEntity<MasterDataUUID>
+deactivate ClientService
+
+ServiceImpl -->> Service: ResponseEntity<MasterDataUUID>
+deactivate ServiceImpl
+
+Service -->> Controller: ResponseEntity<MasterDataUUID>
+deactivate Service
+
+Controller -->> Client: HTTP 200 OK\nMasterDataUUID JSON
+deactivate Controller
+deactivate Validator
+
+@enduml
