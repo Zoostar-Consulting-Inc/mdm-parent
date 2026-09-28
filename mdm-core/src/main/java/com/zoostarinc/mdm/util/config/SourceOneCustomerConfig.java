@@ -1,5 +1,7 @@
 package com.zoostarinc.mdm.util.config;
 
+import org.springframework.web.client.RestClient;
+
 import com.zoostarinc.mdm.model.client.SourceOneCustomer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +15,8 @@ public class SourceOneCustomerConfig extends AbstractClientConfig {
 
 	public static final String TYPE = "customer";
 	
-	public SourceOneCustomerConfig() {
-		super(CLIENT_ID, TYPE, BASE_URL);
+	public SourceOneCustomerConfig(RestClient restClient) {
+		super(CLIENT_ID, TYPE, BASE_URL, restClient);
 	}
 
 	@Override

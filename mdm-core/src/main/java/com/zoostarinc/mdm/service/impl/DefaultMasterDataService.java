@@ -1,12 +1,11 @@
 package com.zoostarinc.mdm.service.impl;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import com.zoostarinc.mdm.model.MasterData;
 import com.zoostarinc.mdm.service.ClientDataService;
 import com.zoostarinc.mdm.service.MasterDataService;
 
@@ -21,11 +20,11 @@ public class DefaultMasterDataService implements MasterDataService {
 	private final ClientDataService clientDataManager;
 
 	@Override
-	public ResponseEntity<MasterDataUUID> update(Supplier<MasterDataUUID> supplier) {
+	public MasterData<UUID> update(Supplier<MasterData<UUID>> supplier) {
 		var request = supplier.get();
-		MasterDataUUID response = null;
+		MasterData<UUID> response = null;
 		try {
-			response = clientDataManager.retrieve(request.getClientId(), request.getType(), request.getSourceId());
+			response = clientDataManager.retrieve(request);
 			if (response != null) {
 				log.info("Retrieved from client: {}", response);
 			} else {
@@ -34,7 +33,7 @@ public class DefaultMasterDataService implements MasterDataService {
 		} catch (NullPointerException e) {
 			// Delete server record
 		}
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return response;
 	}
 
 }

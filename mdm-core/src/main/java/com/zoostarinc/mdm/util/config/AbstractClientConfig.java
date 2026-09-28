@@ -3,6 +3,8 @@ package com.zoostarinc.mdm.util.config;
 import java.util.Objects;
 import java.util.function.Function;
 
+import org.springframework.web.client.RestClient;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -17,6 +19,8 @@ public abstract class AbstractClientConfig implements Function<String, AbstractM
 	private final String type;
 
 	private final String baseUrl;
+
+	private final RestClient restClient;
 	
 	@Override
 	public int hashCode() {

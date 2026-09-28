@@ -1,11 +1,10 @@
 package com.zoostarinc.mdm.service;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.springframework.http.ResponseEntity;
-
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import com.zoostarinc.mdm.model.MasterData;
 
 public interface MasterDataService {
-	ResponseEntity<MasterDataUUID> update(Supplier<MasterDataUUID> supplier);
+	MasterData<UUID> update(Supplier<MasterData<UUID>> supplier);
 }

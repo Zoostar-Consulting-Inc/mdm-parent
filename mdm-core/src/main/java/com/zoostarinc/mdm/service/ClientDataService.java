@@ -1,7 +1,11 @@
 package com.zoostarinc.mdm.service;
 
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import java.util.UUID;
+
+import com.zoostarinc.mdm.model.MasterData;
 
 public interface ClientDataService {
-	MasterDataUUID retrieve(String clientId, String type, String sourceId);
+
+	MasterData<UUID> retrieve(MasterData<UUID> masterData);
+	
 }
