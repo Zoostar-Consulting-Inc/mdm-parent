@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
-public class MasterDataRestController {
+public class MasterDataUUIDRestController {
 
 	private final MasterDataService<UUID> masterDataManager;
 

@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Service
 @RequiredArgsConstructor
-public class DefaultClientDataService implements ClientDataService<UUID>, InitializingBean {
+public class ClientDataUUIDService implements ClientDataService<UUID>, InitializingBean {
 
 	private Map<String /* clientId */, Map<String /* type */, AbstractClientConfig>> registeredClients;
 

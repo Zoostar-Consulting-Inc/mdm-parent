@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 import com.zoostarinc.mdm.service.ClientConfigService;
 
 @Service
-public class DefaultClientConfigService implements ClientConfigService {
+public class ClientConfigUUIDService implements ClientConfigService {
 
 }
