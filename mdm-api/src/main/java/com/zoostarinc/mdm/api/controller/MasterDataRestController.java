@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(path = "/api")
 public class MasterDataRestController {
 
-	private final MasterDataService masterDataManager;
+	private final MasterDataService<UUID> masterDataManager;
 
 	@GetMapping(path = "/{source}/{type}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MasterData<UUID>> update(@PathVariable String source, @PathVariable String type,

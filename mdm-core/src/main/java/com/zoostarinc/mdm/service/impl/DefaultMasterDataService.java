@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultMasterDataService implements MasterDataService {
+public class DefaultMasterDataService implements MasterDataService<UUID> {
 
-	private final ClientDataService clientDataManager;
+	private final ClientDataService<UUID> clientDataManager;
 
 	@Override
 	public MasterData<UUID> update(Supplier<MasterData<UUID>> supplier) {
