@@ -12,8 +12,8 @@ import com.zoostarinc.mdm.model.ClientConfigEntity;
 import com.zoostarinc.mdm.model.MasterData;
 import com.zoostarinc.mdm.service.ClientConfigService;
 import com.zoostarinc.mdm.service.ClientDataService;
-import com.zoostarinc.mdm.util.config.AbstractClientConfig;
-import com.zoostarinc.mdm.util.config.SourceOneCustomerConfig;
+import com.zoostarinc.mdm.util.config.AbstractClientSupplierConfig;
+import com.zoostarinc.mdm.util.config.SourceOneCustomerSupplierConfig;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ClientDataUUIDService implements ClientDataService<UUID>, InitializingBean {
 
-	private Map<String /* clientId */, Map<String /* type */, AbstractClientConfig>> registeredClients;
+	private Map<String /* clientId */, Map<String /* type */, AbstractClientSupplierConfig>> registeredClients;
 
 	private final ClientConfigService clientConfigManager;
 	
@@ -48,7 +48,7 @@ public class ClientDataUUIDService implements ClientDataService<UUID>, Initializ
 		
 		var registeredType = registeredClients.computeIfAbsent(clientId, k -> new HashMap<>());
 		log.info("Registered {} for client {}.", type, clientId);
-		registeredType.computeIfAbsent(type, k -> new SourceOneCustomerConfig(restClient));
+		registeredType.computeIfAbsent(type, k -> new SourceOneCustomerSupplierConfig(restClient));
 		log.info("Registered config for client[{}]:type[{}]: {}" , clientId, type, registeredType.get(type));
 	}
 

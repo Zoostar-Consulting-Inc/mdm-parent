@@ -7,22 +7,18 @@ import com.zoostarinc.mdm.model.client.SourceOneCustomer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SourceOneCustomerConfig extends AbstractClientConfig {
+public class SourceOneCustomerSupplierConfig extends AbstractClientSupplierConfig {
 
-	public static final String BASE_URL = "http://localhost:8080";
+	private static final String FWD_SLASH = "/";
 
-	public static final String CLIENT_ID = "sourceone";
-
-	public static final String TYPE = "customer";
-	
-	public SourceOneCustomerConfig(RestClient restClient) {
-		super(CLIENT_ID, TYPE, BASE_URL, restClient);
+	public SourceOneCustomerSupplierConfig(RestClient restClient) {
+		super("SOURCEONE", "CUSTOMER", "http://localhost:8080", restClient);
 	}
 
 	@Override
 	public SourceOneCustomerMasterDataSupplier apply(String sourceId) {
-		StringBuilder url = new StringBuilder(BASE_URL).append("/").append(CLIENT_ID).append("/").append(TYPE)
-				.append("/").append(sourceId);
+		StringBuilder url = new StringBuilder(super.getBaseUrl()).append(FWD_SLASH).append(super.getClientId())
+				.append(FWD_SLASH).append(super.getType()).append(FWD_SLASH).append(sourceId);
 		log.info("This is where we would call url: {}", url.toString());
 
 		// Data response from client

@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @RequiredArgsConstructor
-public abstract class AbstractClientConfig implements Function<String, AbstractMasterDataSupplier> {
+public abstract class AbstractClientSupplierConfig implements Function<String, AbstractMasterDataSupplier> {
 
 	private final String clientId;
 	
@@ -32,10 +32,10 @@ public abstract class AbstractClientConfig implements Function<String, AbstractM
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AbstractClientConfig)) {
+		if (!(obj instanceof AbstractClientSupplierConfig)) {
 			return false;
 		}
-		AbstractClientConfig other = (AbstractClientConfig) obj;
+		AbstractClientSupplierConfig other = (AbstractClientSupplierConfig) obj;
 		return Objects.equals(clientId, other.clientId) && Objects.equals(type, other.type);
 	}
 	
