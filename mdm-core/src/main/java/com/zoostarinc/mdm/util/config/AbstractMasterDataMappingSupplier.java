@@ -10,6 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class AbstractMasterDataSupplier implements Supplier<MasterData<UUID>> {
+public abstract class AbstractMasterDataMappingSupplier implements Supplier<MasterData<UUID>> {
 
 }

@@ -12,8 +12,8 @@ import com.zoostarinc.mdm.model.ClientConfigEntity;
 import com.zoostarinc.mdm.model.MasterData;
 import com.zoostarinc.mdm.service.ClientConfigService;
 import com.zoostarinc.mdm.service.ClientDataService;
-import com.zoostarinc.mdm.util.config.AbstractClientSupplierConfig;
-import com.zoostarinc.mdm.util.config.SourceOneCustomerSupplierConfig;
+import com.zoostarinc.mdm.util.config.AbstractClientDataApplier;
+import com.zoostarinc.mdm.util.config.SourceOneCustomerApplier;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ClientDataUUIDService implements ClientDataService<UUID>, InitializingBean {
 
-	private Map<String /* clientId */, Map<String /* type */, AbstractClientSupplierConfig>> registeredClients;
+	private Map<String /* clientId */, Map<String /* type */, AbstractClientDataApplier>> registeredClients;
 
 	private final ClientConfigService clientConfigManager;
 	
@@ -48,7 +48,7 @@ public class ClientDataUUIDService implements ClientDataService<UUID>, Initializ
 		
 		var registeredType = registeredClients.computeIfAbsent(clientId, k -> new HashMap<>());
 		log.info("Registered {} for client {}.", type, clientId);
-		registeredType.computeIfAbsent(type, k -> new SourceOneCustomerSupplierConfig(restClient));
+		registeredType.computeIfAbsent(type, k -> new SourceOneCustomerApplier(restClient));
 		log.info("Registered config for client[{}]:type[{}]: {}" , clientId, type, registeredType.get(type));
 	}
 
@@ -61,12 +61,12 @@ public class ClientDataUUIDService implements ClientDataService<UUID>, Initializ
 			throw new IllegalArgumentException("Unknown clientId: " + clientConfigEntity.getClientId());
 		}
 		
-		var clientConfig = value.get(clientConfigEntity.getType());
-		if (clientConfig == null) {
+		var clientDataApplier = value.get(clientConfigEntity.getType());
+		if (clientDataApplier == null) {
 			throw new IllegalArgumentException("Unknown type: " + clientConfigEntity.getType());
 		}
 		
-		return clientConfig.apply(masterData.getSourceId()).get();
+		return clientDataApplier.apply(masterData.getSourceId()).get();
 	}
 
 }

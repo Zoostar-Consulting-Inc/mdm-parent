@@ -6,7 +6,7 @@ import com.zoostarinc.mdm.model.client.SourceOneCustomer;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SourceOneCustomerMasterDataSupplier extends AbstractMasterDataSupplier {
+public class SourceOneCustomerMappingSupplier extends AbstractMasterDataMappingSupplier {
 
 	public static final String CLIENT_ID = "sourceone";
 
