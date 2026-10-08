@@ -1,8 +1,23 @@
 package com.zoostarinc.mdm.model;
 
-public interface MasterData<I> {
-	I getId(); // Preferably UUID
-	String getClientId(); // Integrated Client ID
-	String getType(); // Type of the Record in Client System e.g. CUSTOMER, PRODUCT, etc.
-	String getSourceId(); // ID of the Record in Client System
+import java.util.HashMap;
+import java.util.Map;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class MasterData {
+
+	private MasterDataKey key;
+	
+	private Map<String, String> stringAttributes;
+	
+	public MasterData() {
+		this.stringAttributes = new HashMap<>();
+	}
+	
 }

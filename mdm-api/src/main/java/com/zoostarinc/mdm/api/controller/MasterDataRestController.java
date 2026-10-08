@@ -1,7 +1,5 @@
 package com.zoostarinc.mdm.api.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
-public class MasterDataUUIDRestController {
+public class MasterDataRestController {
 
-	private final MasterDataService<UUID> masterDataManager;
+	private final MasterDataService masterDataManager;
 
 	@GetMapping(path = "/{source}/{type}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MasterData<UUID>> update(@PathVariable String source, @PathVariable String type,
+	public ResponseEntity<MasterData> update(@PathVariable String source, @PathVariable String type,
 			@PathVariable String id) {
 		return ResponseEntity.ok(masterDataManager.update(new DataUpdateRequestSupplier(source, type, id)));
 	}
