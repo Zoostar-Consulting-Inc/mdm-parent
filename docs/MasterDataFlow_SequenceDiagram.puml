@@ -2,54 +2,68 @@
 title Master Data REST API - Request Flow Sequence Diagram
 actor Client
 participant "MasterDataRestController" as Controller
-participant "DataUpdateValidatorUUID" as Validator
+participant "DataUpdateRequestSupplier" as Supplier
 participant "MasterDataService" as Service
 participant "DefaultMasterDataService" as ServiceImpl
-participant "ClientDataService" as ClientService
-participant "MasterDataUUID" as Model
+participant "DefaultClientDataService" as ClientService
+participant "MasterDataRepository" as Repository
+participant "MasterData" as Model
 
 Client ->> Controller: GET /api/{source}/{type}/{id}
 activate Controller
 
-Controller ->> Validator: new DataUpdateValidatorUUID(source, type, id)
-activate Validator
+Controller ->> Supplier: new DataUpdateRequestSupplier(request)
+activate Supplier
 
-Validator ->> Validator: validateSource()
-Validator ->> Validator: validateType()
-Validator ->> Validator: validateId()
+Supplier ->> Supplier: extractSource()
+Supplier ->> Supplier: extractType()
+Supplier ->> Supplier: extractId()
 
-Validator -->> Controller: validator instance created
+Supplier -->> Controller: supplier instance created
 
-Controller ->> Service: update(validator)
+Controller ->> Service: update(supplier)
 activate Service
 
-Service ->> ServiceImpl: update(validator)
+Service ->> ServiceImpl: update(supplier)
 activate ServiceImpl
 
-ServiceImpl ->> Validator: get() [calls supplier]
-activate Validator
+ServiceImpl ->> Supplier: get() [calls supplier]
+activate Supplier
 
-Validator ->> Model: new MasterDataUUID(...)
+Supplier ->> Model: new MasterData(clientId, type, sourceId)
 activate Model
-Model -->> Validator: MasterDataUUID instance
+Model -->> Supplier: MasterData instance
 deactivate Model
 
-Validator -->> ServiceImpl: MasterDataUUID
+Supplier -->> ServiceImpl: MasterData
 
-ServiceImpl ->> ClientService: retrieve(masterDataUUID)
+ServiceImpl ->> ClientService: retrieve(masterData)
 activate ClientService
 
-ClientService -->> ServiceImpl: ResponseEntity<MasterDataUUID>
+ClientService ->> ClientService: findClientConfig()
+ClientService ->> ClientService: callClientAPI()
+
+ClientService -->> ServiceImpl: External data
 deactivate ClientService
 
-ServiceImpl -->> Service: ResponseEntity<MasterDataUUID>
+ServiceImpl ->> Model: updateAttributes(externalData)
+activate Model
+Model -->> ServiceImpl: updated MasterData
+deactivate Model
+
+ServiceImpl ->> Repository: save(masterData)
+activate Repository
+Repository -->> ServiceImpl: saved MasterData
+deactivate Repository
+
+ServiceImpl -->> Service: MasterData
 deactivate ServiceImpl
 
-Service -->> Controller: ResponseEntity<MasterDataUUID>
+Service -->> Controller: MasterData
 deactivate Service
 
-Controller -->> Client: HTTP 200 OK\nMasterDataUUID JSON
+Controller -->> Client: HTTP 200 OK\nMasterData JSON
 deactivate Controller
-deactivate Validator
+deactivate Supplier
 
 @enduml
