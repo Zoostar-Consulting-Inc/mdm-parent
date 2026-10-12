@@ -16,7 +16,9 @@ public class SourceOneCustomerSupplier implements Supplier<SourceOneCustomer> {
 	@Override
 	public SourceOneCustomer get() {
 		log.info("Returning SourceOne Customer for id: {}", id);
-		return new SourceOneCustomer(id, "Source One Customer with ID: " + id);
+		var value = new SourceOneCustomer(id);
+		value.getStringProperties().put("Name", "Source One Customer with ID: " + id);
+		return value;
 	}
 
 }

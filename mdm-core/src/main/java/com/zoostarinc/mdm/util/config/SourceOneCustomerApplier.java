@@ -3,8 +3,6 @@ package com.zoostarinc.mdm.util.config;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
@@ -29,14 +27,8 @@ public class SourceOneCustomerApplier implements Function<String, Supplier<Maste
 	@Override
 	public SourceOneCustomerMappingSupplier apply(String sourceId) {
 		log.info("Applying: {}...", this);
-		var responseEntity = restClient.get().uri(BASE_URL, sourceId).accept(MediaType.APPLICATION_JSON).retrieve()
-				.onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-					if (response.getClass().equals(EmptyResultDataAccessException.class)) {
-						throw new EmptyResultDataAccessException(response.getStatusText(), 1);
-					}
-				});
-
-		return new SourceOneCustomerMappingSupplier(responseEntity.body(SourceOneCustomer.class));
+		var responseEntity = restClient.get().uri(BASE_URL, sourceId).accept(MediaType.APPLICATION_JSON).retrieve();
+		return new SourceOneCustomerMappingSupplier(responseEntity.toEntity(SourceOneCustomer.class).getBody());
 	}
 
 	@Override

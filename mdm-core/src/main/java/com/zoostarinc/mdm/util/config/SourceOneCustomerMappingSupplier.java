@@ -25,7 +25,8 @@ public class SourceOneCustomerMappingSupplier implements Supplier<MasterData> {
 		var key = new MasterDataKey(CLIENT_ID, TYPE, data.getId());
 		var entity = new MasterData();
 		entity.setKey(key);
-		entity.getStringAttributes().put("Name", data.getName());
+		data.getStringProperties().entrySet()
+				.forEach(entry -> entity.getStringAttributes().put(entry.getKey(), entry.getValue()));
 		return entity;
 	}
 

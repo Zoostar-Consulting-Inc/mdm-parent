@@ -1,8 +1,9 @@
 package com.zoostarinc.mdm.model.client;
 
-import lombok.AllArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +12,23 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class SourceOneCustomer implements ClientData {
 
 	private String id;
 
-	private String name;
+	private Map<String, String> stringProperties;
+	
+	public SourceOneCustomer() {
+		this(null);
+	}
+	
+	public SourceOneCustomer(String id) {
+		this(id, new HashMap<>());
+	}
+
+	public SourceOneCustomer(String id, Map<String, String> stringProperties) {
+		this.id = id;
+		this.stringProperties = stringProperties;
+	}
 
 }

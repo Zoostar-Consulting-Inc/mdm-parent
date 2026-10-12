@@ -2,8 +2,8 @@ package com.zoostarinc.mdm.service.impl;
 
 import java.util.function.Supplier;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 import com.zoostarinc.mdm.dao.entity.MasterDataEntity;
 import com.zoostarinc.mdm.dao.repository.MasterDataRepository;
@@ -44,15 +44,19 @@ public class DefaultMasterDataService implements MasterDataService {
 				entity.getStringAttributes().put(entry.getKey(), entry.getValue());
 			}
 			return masterDataRepository.save(entity);
-		} catch (EmptyResultDataAccessException e) {
-			log.info(e.getMessage());
-			if (hasEntity.isPresent()) {
-				log.info("Deleting entity: {}...", hasEntity.get());
-				masterDataRepository.deleteById(hasEntity.get().getId());
-				return hasEntity.get();
-			} else {
-				throw new IllegalArgumentException("No record found in either system!");
+		} catch (BadRequest e) {
+			if (e.getMessage().contains("No data found for given id!")) {
+				if (hasEntity.isPresent()) {
+					log.info("Deleting entity not found in Source System: {}...", hasEntity.get());
+					masterDataRepository.deleteById(hasEntity.get().getId());
+					return hasEntity.get();
+				} else {
+					log.warn(e.getMessage());
+					throw new IllegalArgumentException("No record found in either system!");
+				}
 			}
+			log.error(e.getMessage());
+			throw e;
 		}
 	}
 
