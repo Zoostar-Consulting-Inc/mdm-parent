@@ -1,4 +1,4 @@
-package com.zoostarinc.mdm.model.client;
+package com.zoostarinc.mdm.utils;
 
 import java.util.Map;
 

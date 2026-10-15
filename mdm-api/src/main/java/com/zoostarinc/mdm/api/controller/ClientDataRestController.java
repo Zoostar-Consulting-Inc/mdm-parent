@@ -1,5 +1,7 @@
 package com.zoostarinc.mdm.api.controller;
 
+import java.util.Optional;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +13,11 @@ import com.zoostarinc.mdm.model.client.SourceOneCustomer;
 import com.zoostarinc.mdm.util.config.SourceOneCustomerSupplier;
 
 @RestController
-@RequestMapping(path = "/sourceone")
+@RequestMapping(path = "/sourceone/api")
 public class ClientDataRestController {
 
 	@GetMapping(path = "/customer/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SourceOneCustomer> getClientData(@PathVariable String id) {
+	public ResponseEntity<SourceOneCustomer> getClientData(@PathVariable(required = false) Optional<String> id) {
 		return ResponseEntity.ok(new SourceOneCustomerSupplier(id).get());
 	}
 }

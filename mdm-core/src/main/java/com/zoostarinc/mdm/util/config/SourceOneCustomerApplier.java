@@ -20,7 +20,7 @@ public class SourceOneCustomerApplier implements Function<String, Supplier<Maste
 
 	public static final String CLIENT_TYPE = "customer";
 
-	private static final String BASE_URL = "http://localhost:8080/sourceone/customer/{id}";
+	private static final String BASE_URL = "http://localhost:8080/sourceone/api/customer/{id}";
 
 	private final RestClient restClient;
 

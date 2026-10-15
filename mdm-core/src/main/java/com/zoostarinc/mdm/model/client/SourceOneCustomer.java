@@ -3,6 +3,8 @@ package com.zoostarinc.mdm.model.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zoostarinc.mdm.utils.ClientData;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
