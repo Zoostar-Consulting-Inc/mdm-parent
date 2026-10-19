@@ -6,13 +6,13 @@
 	<parent>
 		<groupId>com.zoostarinc.mdm</groupId>
 		<artifactId>mdm-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>com.zoostarinc.mdm</groupId>
 			<artifactId>mdm-utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
