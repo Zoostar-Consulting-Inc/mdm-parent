@@ -25,7 +25,7 @@ public class MasterDataRestController {
 	@GetMapping(path = "/{source}/{type}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MasterData> update(@PathVariable String source, @PathVariable String type,
 			@PathVariable String id) {
-		return ResponseEntity.ok(masterDataManager.update(new DataUpdateRequestSupplier(source, type, id)));
+		return masterDataManager.update(new DataUpdateRequestSupplier(source, type, id));
 	}
 
 }
