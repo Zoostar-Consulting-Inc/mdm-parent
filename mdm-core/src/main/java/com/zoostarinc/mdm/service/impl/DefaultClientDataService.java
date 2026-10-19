@@ -1,11 +1,19 @@
 package com.zoostarinc.mdm.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import com.zoostarinc.mdm.model.ClientConfigEntity;
+import com.zoostarinc.mdm.model.MasterData;
+import com.zoostarinc.mdm.service.ClientConfigService;
 import com.zoostarinc.mdm.service.ClientDataService;
-import com.zoostarinc.mdm.util.config.SourceOneCustomerConfig;
+import com.zoostarinc.mdm.util.config.SourceOneCustomerApplier;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,26 +27,47 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DefaultClientDataService implements ClientDataService, InitializingBean {
 
-	private ClientConfigFactory clientConfigFactory;
+	private Map<String /* clientId */, Map<String /* type */, Function<String, Supplier<MasterData>>>> registeredClients;
 
-	@Override
-	public MasterDataUUID retrieve(String clientId, String type, String sourceId) {
-		var clientData = clientConfigFactory.getClientData(clientId, type, sourceId);
-		if (clientData == null) {
-			throw new IllegalArgumentException(String.format("No data found for given clientId: %s.", clientId));
-		}
-		return clientData;
-	}
+	private final ClientConfigService clientConfigManager;
+
+	private final RestClient restClient;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		initClientConfigFactory();
+		initClientConfigs();
 	}
 
-	protected void initClientConfigFactory() {
-		log.info("{}...", "Initializing Client Config Factory");
-		clientConfigFactory = new ClientConfigFactory();
-		clientConfigFactory.registerClient("SOURCEONE", "CUSTOMER", new SourceOneCustomerConfig()); // This can also be configured in DB
+	protected void initClientConfigs() {
+		log.info("{}...", "Initializing Client Configurations");
+
+		// This can also be configured in DB
+		registeredClients = new HashMap<>();
+		String clientId = "sourceone";
+		String type = "customer";
+
+		var registeredType = registeredClients.computeIfAbsent(clientId, k -> new HashMap<>());
+		log.info("Registered {} for client {}.", type, clientId);
+		registeredType.computeIfAbsent(type, k -> new SourceOneCustomerApplier(restClient));
+		log.info("Registered applier for client[{}]:type[{}]: {}", clientId, type, registeredType.get(type));
+	}
+
+	@Override
+	public MasterData retrieve(MasterData masterData) {
+		ClientConfigEntity clientConfigEntity = clientConfigManager.retrieve(masterData.getKey().getClientId(),
+				masterData.getKey().getType());
+
+		var value = registeredClients.get(clientConfigEntity.getClientId());
+		if (value == null) {
+			throw new IllegalArgumentException("Unknown clientId: " + clientConfigEntity.getClientId());
+		}
+
+		var clientDataApplier = value.get(clientConfigEntity.getType());
+		if (clientDataApplier == null) {
+			throw new IllegalArgumentException("Unknown type: " + clientConfigEntity.getType());
+		}
+
+		return clientDataApplier.apply(masterData.getKey().getSourceId()).get();
 	}
 
 }

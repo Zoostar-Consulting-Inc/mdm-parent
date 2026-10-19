@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import com.zoostarinc.mdm.model.MasterData;
 import com.zoostarinc.mdm.service.MasterDataService;
-import com.zoostarinc.mdm.util.function.DataUpdateValidatorUUID;
+import com.zoostarinc.mdm.util.function.DataUpdateRequestSupplier;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,9 @@ public class MasterDataRestController {
 	private final MasterDataService masterDataManager;
 
 	@GetMapping(path = "/{source}/{type}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MasterDataUUID> update(@PathVariable String source, @PathVariable String type,
+	public ResponseEntity<MasterData> update(@PathVariable String source, @PathVariable String type,
 			@PathVariable String id) {
-		return masterDataManager.update(new DataUpdateValidatorUUID(source, type, id));
+		return masterDataManager.update(new DataUpdateRequestSupplier(source, type, id));
 	}
 
 }

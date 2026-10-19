@@ -22,6 +22,15 @@ logging:
       file-name-pattern: "logs/archive/@project.build.finalName@-%d{yyyy-MM-dd}.%i.log.zip"
       max-history: 10
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans,health,info,metrics,loggers,httptrace
+  endpoint:
+    health:
+      show-details: always
+
 spring:
   output:
     ansi:

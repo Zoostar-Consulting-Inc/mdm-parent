@@ -3,6 +3,7 @@ package com.zoostarinc.mdm.api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestClient;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -32,5 +33,10 @@ public class ApplicationContext {
 		return new OpenAPI().info(new Info().title("Master Data API").description("This API provides operations for Master Data Management.")
 				.version(version.toString()).contact(new Contact().name("zoostar").email("devops@zoostar.net")));
 	}
-
+	
+    @Bean
+    RestClient restClient(RestClient.Builder builder) {
+        return builder.build();
+    }
+    
 }

@@ -4,9 +4,8 @@ import java.util.function.Supplier;
 
 import org.springframework.http.ResponseEntity;
 
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import com.zoostarinc.mdm.model.MasterData;
 
 public interface MasterDataService {
-//	MasterDataUUID update(Supplier<MasterDataUUID> supplier);
-	ResponseEntity<MasterDataUUID> update(Supplier<MasterDataUUID> supplier);
+	ResponseEntity<MasterData> update(Supplier<MasterData> supplier);
 }

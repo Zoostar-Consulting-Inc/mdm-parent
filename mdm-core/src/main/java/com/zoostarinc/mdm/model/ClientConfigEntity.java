@@ -1,8 +1,7 @@
 package com.zoostarinc.mdm.model;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,16 +12,14 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MasterDataUUID implements MasterData<UUID> {
+public class ClientConfigEntity {
 
-	private UUID id;
-	
-	private String sourceId;
-	
-	private String type;
-	
+	@EqualsAndHashCode.Include
 	private String clientId;
 	
-	private String title;
+	@EqualsAndHashCode.Include
+	private String type;
+	
+	private String baseUrl;
 	
 }

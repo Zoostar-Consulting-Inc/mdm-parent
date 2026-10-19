@@ -1,0 +1,69 @@
+@startuml MasterDataRestFlow
+title Master Data REST API - Request Flow Sequence Diagram
+actor Client
+participant "MasterDataRestController" as Controller
+participant "DataUpdateRequestSupplier" as Supplier
+participant "MasterDataService" as Service
+participant "DefaultMasterDataService" as ServiceImpl
+participant "DefaultClientDataService" as ClientService
+participant "MasterDataRepository" as Repository
+participant "MasterData" as Model
+
+Client ->> Controller: GET /api/{source}/{type}/{id}
+activate Controller
+
+Controller ->> Supplier: new DataUpdateRequestSupplier(request)
+activate Supplier
+
+Supplier ->> Supplier: extractSource()
+Supplier ->> Supplier: extractType()
+Supplier ->> Supplier: extractId()
+
+Supplier -->> Controller: supplier instance created
+
+Controller ->> Service: update(supplier)
+activate Service
+
+Service ->> ServiceImpl: update(supplier)
+activate ServiceImpl
+
+ServiceImpl ->> Supplier: get() [calls supplier]
+activate Supplier
+
+Supplier ->> Model: new MasterData(clientId, type, sourceId)
+activate Model
+Model -->> Supplier: MasterData instance
+deactivate Model
+
+Supplier -->> ServiceImpl: MasterData
+
+ServiceImpl ->> ClientService: retrieve(masterData)
+activate ClientService
+
+ClientService ->> ClientService: findClientConfig()
+ClientService ->> ClientService: callClientAPI()
+
+ClientService -->> ServiceImpl: External data
+deactivate ClientService
+
+ServiceImpl ->> Model: updateAttributes(externalData)
+activate Model
+Model -->> ServiceImpl: updated MasterData
+deactivate Model
+
+ServiceImpl ->> Repository: save(masterData)
+activate Repository
+Repository -->> ServiceImpl: saved MasterData
+deactivate Repository
+
+ServiceImpl -->> Service: MasterData
+deactivate ServiceImpl
+
+Service -->> Controller: MasterData
+deactivate Service
+
+Controller -->> Client: HTTP 200 OK\nMasterData JSON
+deactivate Controller
+deactivate Supplier
+
+@enduml

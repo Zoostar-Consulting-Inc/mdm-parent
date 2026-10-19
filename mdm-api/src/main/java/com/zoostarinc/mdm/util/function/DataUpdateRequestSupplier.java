@@ -1,10 +1,12 @@
 package com.zoostarinc.mdm.util.function;
 
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 import org.springframework.util.StringUtils;
 
-import com.zoostarinc.mdm.model.MasterDataUUID;
+import com.zoostarinc.mdm.model.MasterData;
+import com.zoostarinc.mdm.model.MasterDataKey;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -13,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ToString
 @RequiredArgsConstructor
-public class DataUpdateValidatorUUID implements Supplier<MasterDataUUID> {
+public class DataUpdateRequestSupplier implements Supplier<MasterData> {
 
 	private final String source;
 
@@ -22,7 +24,7 @@ public class DataUpdateValidatorUUID implements Supplier<MasterDataUUID> {
 	private final String id;
 	
 	@Override
-	public MasterDataUUID get() {
+	public MasterData get() {
 		if(!StringUtils.hasText(source)) {
 			throw new IllegalArgumentException("Source is required!");
 		}
@@ -35,12 +37,10 @@ public class DataUpdateValidatorUUID implements Supplier<MasterDataUUID> {
 			throw new IllegalArgumentException("Id is required!");
 		}
 
-		var data = new MasterDataUUID();
-		data.setClientId(source);
-		data.setSourceId(id);
-		data.setType(type);
-
 		log.info("Update request received from {} for {} with id: {}...", source, type, id);
+		var data = new MasterData();
+		data.setKey(new MasterDataKey(source.toLowerCase(), type.toLowerCase(), id));
+		data.setStringAttributes(new HashMap<>());
 		return data;
 	}
 
