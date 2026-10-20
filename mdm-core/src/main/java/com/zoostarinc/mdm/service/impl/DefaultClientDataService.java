@@ -57,12 +57,12 @@ public class DefaultClientDataService implements ClientDataService, Initializing
 		ClientConfigEntity clientConfigEntity = clientConfigManager.retrieve(masterData.getKey().getClientId(),
 				masterData.getKey().getType());
 
-		var value = registeredClients.get(clientConfigEntity.getClientId());
-		if (value == null) {
+		var client = registeredClients.get(clientConfigEntity.getClientId());
+		if (client == null) {
 			throw new IllegalArgumentException("Unknown clientId: " + clientConfigEntity.getClientId());
 		}
 
-		var clientDataApplier = value.get(clientConfigEntity.getType());
+		var clientDataApplier = client.get(clientConfigEntity.getType());
 		if (clientDataApplier == null) {
 			throw new IllegalArgumentException("Unknown type: " + clientConfigEntity.getType());
 		}
